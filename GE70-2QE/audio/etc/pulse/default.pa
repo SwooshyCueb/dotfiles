@@ -1,0 +1,128 @@
+#!/usr/bin/pulseaudio -nF
+# Pulseaudio default startup script
+
+.nofail
+
+### Load something into the sample cache
+#load-sample-lazy x11-bell /usr/share/sounds/freedesktop/stereo/bell.oga
+#load-sample-lazy pulse-hotplug /usr/share/sounds/freedesktop/stereo/device-added.oga
+#load-sample-lazy pulse-coldplug /usr/share/sounds/freedesktop/stereo/device-added.oga
+#load-sample-lazy pulse-access /usr/share/sounds/freedesktop/stereo/message.oga
+
+.fail
+
+### Automatically restore the volume of streams and devices
+load-module module-device-restore
+load-module module-stream-restore
+load-module module-card-restore
+# We may need to figure out a way to keep messenger notifications from becoming extremely loud
+# Perhaps a separate sink for them?
+
+### Automatically augment property information from .desktop files
+### stored in /usr/share/application
+load-module module-augment-properties
+
+### Should be after module-*-restore but before module-*-detect
+# Detects headphones being plugged in/unplugged and makes appropriate adjustments
+load-module module-switch-on-port-available
+# TODO: Since we're using JACK, we might not need this. Try commenting it out.
+
+# Since we're attaching to JACK, let's not load hardware detection modules
+# We've got a uniquie setup, so sinks and sources must be manually setup
+
+### Connect to JACK
+###################
+
+# Input device first
+load-module module-jack-source source_name=JACK_in channels=2 connect=1 client_name=pulse_micout
+update-source-proplist JACK_in device.description="Microphone (JACK source)"
+
+# Onboard surround sound output
+load-module module-jack-sink sink_name=JACK_Surround channel_map=front-left,front-right,rear-left,rear-right connect=1 client_name=pulse40_in
+update-sink-proplist JACK_Surround device.description="Audio Out (4.0 surround sound)"
+
+# Onboard stereo output
+load-module module-jack-sink sink_name=JACK_Stereo channels=2 connect=0 client_name=pulse20_in
+update-sink-proplist JACK_Stereo device.description="Audio Out (Stereo)"
+
+# TODO: JACK monitors, somehow?
+
+# Surround sound JACK monitor
+#load-module module-jack-source source_name=JACK_Surround_Monitor channels=4 connect=0 client_name=pulse40_out
+#update-source-proplist JACK_Surround_Monitor device.description="JACK monitor (4.0 surround sound)"
+
+# Stereo JACK monitor
+#load-module module-jack-source source_name=JACK_Stereo_Monitor channels=2 connect=0 client_name=pulse20_out
+#update-source-proplist JACK_Stereo_Monitor device.description="JACK monitor (Stereo)"
+
+# Make JACK default
+# Let's default to the stereo sink, since most things are stereo.
+set-default-sink JACK_Stereo
+set-default-source JACK_in
+
+### Automatically restore the default sink/source when changed by the user
+### during runtime
+### NOTE: This should be loaded as early as possible so that subsequent modules
+### that look up the default sink/source get the right value
+load-module module-default-device-restore
+
+### Load several protocols
+.ifexists module-esound-protocol-unix.so
+load-module module-esound-protocol-unix
+.endif
+load-module module-native-protocol-unix
+
+#### If we're going to use network stuff and need to load modules, do that here
+
+### Load additional modules from GConf settings. This can be configured with the paprefs tool.
+### Please keep in mind that the modules configured by paprefs might conflict with manually
+### loaded modules.
+# Let's disable this for now
+#.ifexists module-gconf.so
+#.nofail
+#load-module module-gconf
+#.fail
+#.endif
+
+### Automatically move streams to the default sink if the sink they are
+### connected to dies, similar for sources
+load-module module-rescue-streams
+
+### Make sure we always have a sink around, even if it is a null sink.
+load-module module-always-sink
+
+### Honour intended role device property
+load-module module-intended-roles
+
+### Automatically suspend sinks/sources that become idle for too long
+load-module module-suspend-on-idle
+# How well does this work with JACK? Any power-saving benefits?
+
+### If autoexit on idle is enabled we want to make sure we only quit
+### when no local session needs us anymore.
+.ifexists module-console-kit.so
+load-module module-console-kit
+.endif
+.ifexists module-systemd-login.so
+load-module module-systemd-login
+.endif
+
+### Enable positioned event sounds
+load-module module-position-event-sounds
+
+### Cork music/video streams when a phone stream is active
+#load-module module-role-cork
+
+### Duck music/video/game streams when a voice stream is active
+# TODO: Figure this out
+load-module module-role-ducking trigger_roles=voice ducking_roles=music,video,game,browser global=1 volume=-20dB
+
+### Modules to allow autoloading of filters (such as echo cancellation)
+### on demand. module-filter-heuristics tries to determine what filters
+### make sense, and module-filter-apply does the heavy-lifting of
+### loading modules and rerouting streams.
+# TODO: Figure this out
+load-module module-filter-heuristics
+load-module module-filter-apply
+
+
