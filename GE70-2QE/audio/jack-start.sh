@@ -38,11 +38,20 @@ pulse2jack() {
     cstatus=$?
 
     if [ "$cstatus" != "0" ]; then
-        echoerr Connecting ${psink}:${pport} to ${jsink}:${jport} failed.
-        echoerr Trying again in three seconds.
-        sleep 3
-        jack_connect ${psink}:${pport} ${jsink}:${jport}
-        cstatus=$?
+        for i in $(seq 10 -1 1); do
+            echoerr Connecting ${psink}:${pport} to ${jsink}:${jport} failed.
+            echoerr Trying again in one second.
+            echoerr Will try $i more times.
+            sleep 1
+            jack_connect ${psink}:${pport} ${jsink}:${jport} 2>/dev/null
+            cstatus=$?
+            if [ "$cstatus" == "0" ]; then
+                break
+            fi
+        done
+        if [ "$cstatus" != "0" ]; then
+            echoerr Could not connect ${psink}:${pport} to ${jsink}:${jport}.
+        fi
     fi
 
     return $cstatus
