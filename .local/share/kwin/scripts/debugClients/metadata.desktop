@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Debug CLients
+Comment=On shortcut, prints a list of all clients along their states as seen by KWin - ensure to enable 1212 in kdebugdialog!
+Icon=preferences-system-windows-script-test
+
+Type=Service
+
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+
+X-KDE-PluginInfo-Author=Thomas Lübking
+X-KDE-PluginInfo-Email=thomas.luebking@gmail.com
+X-KDE-PluginInfo-Name=debugClients
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script
+X-KDE-PluginKeyword=debugClients
+X-KDE-ParentComponents=debugClients

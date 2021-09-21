@@ -1,1 +1,0 @@
-/usr/bin/jackd -dalsa -djack21 -r48000 -p1024 -n2 -i2 -o4

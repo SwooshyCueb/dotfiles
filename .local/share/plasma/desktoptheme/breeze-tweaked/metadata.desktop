@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Breeze Tweaked
+Comment=Slight tweaks to Breeze
+X-KDE-PluginInfo-Author=SwooshyCueb
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Email=root@swooshalicio.us
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=MIT
+X-KDE-PluginInfo-Name=breeze-tweaked
+X-KDE-PluginInfo-Version=1.0.1
+X-KDE-PluginInfo-Website=
+X-Plasma-API=5.0
+
+[Settings]
+FallbackTheme=breeze

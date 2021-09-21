@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Unminimize transients
+Comment=Automatically unminimizes non modal windows without taskbar entry
+Icon=preferences-system-windows-script-test
+
+Type=Service
+
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+
+X-KDE-PluginInfo-Author=Thomas Lübking
+X-KDE-PluginInfo-Email=thomas.luebking@gmail.com
+X-KDE-PluginInfo-Name=unminimizeTransients
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script
+X-KDE-PluginKeyword=unminimizeTransients
+X-KDE-ParentComponents=unminimizeTransients

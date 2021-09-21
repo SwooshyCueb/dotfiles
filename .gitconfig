@@ -1,0 +1,28 @@
+[user]
+	email = root@swooshalicio.us
+	name = Markus Kitsinger (SwooshyCueb)
+[credential]
+	helper = cache
+[core]
+	editor = nano
+[push]
+	default = matching
+[color]
+	ui = auto
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+[delta]
+	dark = true
+	line-numbers = true
+	syntax-theme = Coldark-Dark
+	diff-so-fancy = true
+	side-by-side = true
+[interactive]
+	diffFilter = delta --color-only
